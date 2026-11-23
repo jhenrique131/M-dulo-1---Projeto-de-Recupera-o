@@ -79,3 +79,32 @@ def extrair_csvs(zip_path):
             destino.write_bytes(zf.read(interno))
             caminhos[tabela] = destino
     return caminhos  
+def carregar_tabela(conn, tabela, csv_path):
+    """TRUNCATE + carga em blocos de um CSV na tabela Raw."""
+    colunas = config.COLUNAS_RAW[tabela]
+    total_cols = len(pd.read_csv(csv_path, sep=config.CSV_SEP,
+                                 encoding=config.CSV_ENCODING, nrows=0).columns)
+    if total_cols < len(colunas):
+        raise ValueError(f"{csv_path.name}:{total_cols} colunas,"
+                         f"esperado {len(colunas)}")
+    conexao = conn
+
+    #Executa um DROP TABLE para a tabela antes de carregar os dados
+    log.info(f"Truncando tabela {tabela} antes de carregar os dados")
+    executar(f"TRUNCATE TABLE {tabela}", conn=conexao)
+
+    blocos = pd.read_csv(
+        csv_path, sep=config.CSV_SEP, encoding=config.CSV_ENCODING,
+        dtype=str, keep_default_na=False, header=0, names=colunas,
+        usecols=range(len(colunas)), chunksize=config.CHUNK_SIZE,
+    )
+    #print(f"Blocos: {blocos.read()}")
+    total = 0
+    #testes = pd.DataFrame(blocos.read(10))
+    #print(f"Testes: {testes}")
+    for bloco in blocos:
+        linhas = list(bloco.itertuples(index=False, name=None))
+        total += inserir_em_lote(conn, tabela, colunas, linhas)
+    conn.commit()
+    log.info("%s: %d linhas carregadas", tabela, total)
+    return total
