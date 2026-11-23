@@ -5,6 +5,7 @@
 data/
 *.zip
 *.csv
+.vscode
 
 # Python
 __pycache__/
