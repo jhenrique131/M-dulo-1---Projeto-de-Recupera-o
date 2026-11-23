@@ -22,3 +22,15 @@ log = logging.getLogger("transformar")
 LIMITE_DECIMAL = Decimal("99999999.99")   
 
 NAO_INFORMADO = "NÃO INFORMADO"
+
+# ---------------------------------------------------------------------
+# Funcoes de conversao
+# ---------------------------------------------------------------------
+def limpar_texto(valor, tamanho=None, padrao=None):
+    """Remove espacos; vazio vira `padrao` (None); corta no tamanho."""
+    if valor is None:
+        return padrao
+    texto = valor.strip()
+    if not texto:
+        return padrao
+    return texto[:tamanho] if tamanho else texto
