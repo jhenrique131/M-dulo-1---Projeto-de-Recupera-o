@@ -68,3 +68,8 @@ def texto_para_inteiro(valor):
     except(AttributeError, ValueError):
         return None
 
+def calcular_valor_total(diarias, passagens, outros, devolucao):
+    """Calcula valor_total = diarias + passagens + outros - devolucao."""
+    zero = Decimal("0.00")
+    return ((diarias or zero) + (passagens or zero) + (outros or zero) 
+            - (devolucao or zero)).quantize(Decimal("0.01"))
