@@ -79,3 +79,8 @@ def calcular_duracao(inicio, fim):
     if inicio is None or fim is None:
         return None
     return (fim - inicio).days + 1
+def negativo(*valores):
+    """Retorna True se algum dos valores for negativo."""
+    return any(v is not None and v < 0 for v in valores)
+
+
