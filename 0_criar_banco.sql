@@ -41,3 +41,15 @@ CREATE TABLE raw_viagem (
     valor_devolucao         VARCHAR(4000),
     valor_outros_gastos     VARCHAR(4000)
 );
+CREATE TABLE raw_pagamento (
+    id_viagem            VARCHAR(4000),
+    num_proposta         VARCHAR(4000),
+    cod_orgao_superior   VARCHAR(4000),
+    nome_orgao_superior  VARCHAR(4000),
+    cod_orgao_pagador    VARCHAR(4000),
+    nome_orgao_pagador   VARCHAR(4000),
+    cod_ug_pagadora      VARCHAR(4000),
+    nome_ug_pagadora     VARCHAR(4000),
+    tipo_pagamento       VARCHAR(4000),
+    valor                VARCHAR(4000)
+);
