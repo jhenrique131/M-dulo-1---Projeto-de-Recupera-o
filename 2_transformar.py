@@ -197,3 +197,21 @@ ETAPAS = [
       "meio_transporte", "numero_diarias"],
      linha_trecho, "ON CONFLICT (id_viagem, sequencia_trecho) DO NOTHING"),
 ]
+
+def processar(leitura, escrita, etapa, ids):
+    raw, silver, cols_raw, cols_silver, funcao, on_conflict = etapa
+    consulta = f"SELECT {', '.join(cols_raw)} FROM {raw}"
+    lidas = enviadas = 0
+    for bloco in ler_em_bloco(leitura, consulta, config.CHUNK_SIZE):
+        saida = []
+        for linha in bloco:
+            convertida = funcao(linha, ids)
+            if convertida is not None:
+                saida.append(convertida)
+        lidas += len(bloco)
+        enviadas += inserir_em_lote(escrita, silver, cols_silver, saida, on_conflict)
+    escrita.commit()
+    #Encerra a transação do cursor de leitura
+    leitura.rollback()     
+    log.info("%s: %d lidas, %d aceitas, %d rejeitadas/duplicadas",
+             silver, lidas, enviadas, lidas - enviadas)
