@@ -73,3 +73,9 @@ def calcular_valor_total(diarias, passagens, outros, devolucao):
     zero = Decimal("0.00")
     return ((diarias or zero) + (passagens or zero) + (outros or zero) 
             - (devolucao or zero)).quantize(Decimal("0.01"))
+
+def calcular_duracao(inicio, fim):
+    """Calcula duracao_dias = (data_fim - data_inicio) + 1. Retorna None se inicio ou fim for None."""
+    if inicio is None or fim is None:
+        return None
+    return (fim - inicio).days + 1
