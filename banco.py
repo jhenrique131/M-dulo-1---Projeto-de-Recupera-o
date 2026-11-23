@@ -3,13 +3,15 @@ import uuid
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import execute_values
-#import os
-#from dotenv import load_dotenv
+# import os
+# from dotenv import load_dotenv
 import config
+
 
 def conectar():
     """Abre conexão com o PostgreSQL."""
     return psycopg2.connect(**config.DB_CONFIG)
+
 
 def get_engine():
     """
@@ -22,7 +24,7 @@ def get_engine():
     from sqlalchemy.engine import URL
 
     cfg = config.DB_CONFIG
-    #print(f"Configurações do banco: {cfg}")
+    # print(f"Configurações do banco: {cfg}")
     url = URL.create(
         "postgresql+psycopg2",
         username=cfg["user"],
@@ -32,6 +34,7 @@ def get_engine():
         database=cfg["database"],
     )
     return create_engine(url)
+
 
 def executar(comando, params=None, conn=None):
     """
@@ -56,11 +59,12 @@ def executar(comando, params=None, conn=None):
         if propria:
             conn.close()
 
+
 def inserir_em_lote(conn, tabela, colunas, linhas, on_conflict="",
                     page_size=5000):
     """
     Insere em lote no PostgreSQL.
-   
+
     `tabela` é o nome da tabela.
     `colunas` é uma lista de nomes de colunas.
     `linhas` é uma lista de tuplas com os valores a serem inseridos.
@@ -78,10 +82,11 @@ def inserir_em_lote(conn, tabela, colunas, linhas, on_conflict="",
 
         return len(linhas)
 
+
 def ler_em_bloco(conn, consulta, tamanho=50_000):
     """
    Le o resultado de uma consulta em blocos (cursor no servidor)
-   
+
     `comando` é o comando SQL a ser executado.
     `tamanho` é o tamanho do bloco a ser lido.
     """
@@ -93,6 +98,6 @@ def ler_em_bloco(conn, consulta, tamanho=50_000):
             if not bloco:
                 break
             yield bloco
-        
-   
-#get_engine()
+
+
+# get_engine()
