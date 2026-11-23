@@ -1,0 +1,15 @@
+# Credenciais
+.env
+.env.exemplo
+requirements.txt
+
+# Dados (nunca versionar)
+data/
+*.zip
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
