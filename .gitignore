@@ -1,7 +1,5 @@
 # Credenciais
 .env
-.env.exemplo
-
 
 # Dados (nunca versionar)
 data/
